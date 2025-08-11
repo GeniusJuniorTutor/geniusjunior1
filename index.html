@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-book Center - หนังสือเตรียมสอบเข้า ม.1 </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .book-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .book-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--book-color);
+        }
+        
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .book-card.math { --book-color: #ff6b6b; }
+        .book-card.chemistry { --book-color: #4ecdc4; }
+        .book-card.physics { --book-color: #45b7d1; }
+        .book-card.biology { --book-color: #96ceb4; }
+        .book-card.astronomy { --book-color: #9b59b6; }
+        .book-card.english { --book-color: #f39c12; }
+        
+        .book-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            background: var(--book-color);
+        }
+        
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .book-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .book-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .book-features li {
+            padding: 5px 0;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .book-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--book-color);
+            font-weight: bold;
+        }
+        
+        .price-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--book-color);
+            margin-bottom: 15px;
+        }
+        
+        .buy-button {
+            background: var(--book-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .buy-button:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        .cart {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            padding: 15px 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cart:hover {
+            transform: scale(1.05);
+        }
+        
+        .notes-button {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            padding: 15px 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            color: #333;
+            font-size: 1rem;
+        }
+        
+        .notes-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .cart-count {
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 2px solid #333;
+        }
+        
+        .close-button {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .checkout-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .checkout-button:hover {
+            background: #45a049;
+        }
+        
+        .notes-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .notes-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .notes-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .notes-tab {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .notes-tab.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .notes-tab:hover {
+            transform: translateY(-2px);
+        }
+        
+        .note-area {
+            display: none;
+        }
+        
+        .note-area.active {
+            display: block;
+        }
+        
+        .note-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .note-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .note-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .save-note-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .save-note-btn:hover {
+            background: #45a049;
+        }
+        
+        .clear-note-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .clear-note-btn:hover {
+            background: #ff5252;
+        }
+        
+        .word-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .books-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .cart {
+                position: relative;
+                margin-bottom: 20px;
+            }
+            
+            .notes-button {
+                position: relative;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 GeniusJR E-book Center</h1>
+            <p class="subtitle">หนังสือเตรียมสอบเข้า ม.1 คุณภาพสูง ราคาสุดคุ้ม หากมีปัญหาโปรดโทร 065-959-2550</p>
+        </header>
+        
+        <div class="cart" onclick="showCart()">
+            <span>🛒 ตะกร้า</span>
+            <div class="cart-count" id="cartCount">0</div>
+        </div>
+        
+        <button class="notes-button" onclick="showNotes()">
+            📝 บันทึกการเรียน
+        </button>
+        
+        <div class="books-grid">
+            <div class="book-card math">
+                <div class="book-icon">📊</div>
+                <h3 class="book-title">คณิตศาสตร์ ป.6</h3>
+                <p class="book-description">เตรียมตัวสอบเข้า ม.1 ด้วยเนื้อหาคณิตศาสตร์ที่ครบถ้วน</p>
+                <ul class="book-features">
+                    <li>เลขคณิต และพีชคณิตเบื้องต้น</li>
+                    <li>เรขาคณิต และการวัด</li>
+                    <li>สถิติ และความน่าจะเป็น</li>
+                    <li>แบบฝึกหัด 200+ ข้อ</li>
+                    <li>เฉลยละเอียด</li>
+                </ul>
+                <div class="price-section">
+                    <div class="price">50 บาท</div>
+                    <button class="buy-button" onclick="addToCart('คณิตศาสตร์ ป.6', 50)">ซื้อเลย</button>
+                </div>
+            </div>
+            
+            <div class="book-card chemistry">
+                <div class="book-icon">🧪</div>
+                <h3 class="book-title">เคมี ป.6</h3>
+                <p class="book-description">ความรู้พื้นฐานเคมี เพื่อเตรียมพร้อมสู่ระดับมัธยมต้น</p>
+                <ul class="book-features">
+                    <li>สสารและสมบัติ</li>
+                    <li>การเปลี่ยนแปลงของสสาร</li>
+                    <li>กรด เบส เกลือ</li>
+                    <li>การทดลองจริง</li>
+                    <li>แบบทดสอบ</li>
+                </ul>
+                <div class="price-section">
+                    <div class="price">50 บาท</div>
+                    <button class="buy-button" onclick="addToCart('เคมี ป.6', 50)">ซื้อเลย</button>
+                </div>
+            </div>
+            
+            <div class="book-card physics">
+                <div class="book-icon">⚡</div>
+                <h3 class="book-title">ฟิสิกส์ ป.6</h3>
+                <p class="book-description">หลักการฟิสิกส์พื้นฐาน ที่จำเป็นสำหรับนักเรียน ม.1</p>
+                <ul class="book-features">
+                    <li>แรงและการเคลื่อนที่</li>
+                    <li>พลังงานและงาน</li>
+                    <li>เสียงและแสง</li>
+                    <li>ไฟฟ้าเบื้องต้น</li>
+                    <li>การทดลองง่ายๆ</li>
+                </ul>
+                <div class="price-section">
+                    <div class="price">50 บาท</div>
+                    <button class="buy-button" onclick="addToCart('ฟิสิกส์ ป.6', 50)">ซื้อเลย</button>
+                </div>
+            </div>
+            
+            <div class="book-card biology">
+                <div class="book-icon">🧬</div>
+                <h3 class="book-title">ชีววิทยา ป.6</h3>
+                <p class="book-description">ศึกษาสิ่งมีชีวิต และระบบต่างๆ ในร่างกาย</p>
+                <ul class="book-features">
+                    <li>เซลล์และระบบชีวิต</li>
+                    <li>ระบบในร่างกายมนุษย์</li>
+                    <li>พืชและสัตว์</li>
+                    <li>ระบบนิเวศ</li>
+                    <li>พันธุกรรมเบื้องต้น</li>
+                </ul>
+                <div class="price-section">
+                    <div class="price">50 บาท</div>
+                    <button class="buy-button" onclick="addToCart('ชีววิทยา ป.6', 50)">ซื้อเลย</button>
+                </div>
+            </div>
+            
+            <div class="book-card astronomy">
+                <div class="book-icon">🌟</div>
+                <h3 class="book-title">ดาราศาสตร์ ป.6</h3>
+                <p class="book-description">สำรวจจักรวาล ดวงดาว และระบบสุริยะ</p>
+                <ul class="book-features">
+                    <li>ระบบสุริยะ</li>
+                    <li>ดาว ดวงจันทร์</li>
+                    <li>กาแล็กซี่และจักรวาล</li>
+                    <li>การสำรวจอวกาศ</li>
+                    <li>แผนที่ดาว</li>
+                </ul>
+                <div class="price-section">
+                    <div class="price">50 บาท</div>
+                    <button class="buy-button" onclick="addToCart('ดาราศาสตร์ ป.6', 50)">ซื้อเลย</button>
+                </div>
+            </div>
+            
+            <div class="book-card english">
+                <div class="book-icon">📝</div>
+                <h3 class="book-title">ไวยากรณ์อังกฤษ ป.6</h3>
+                <p class="book-description">พื้นฐานไวยากรณ์อังกฤษ สำหรับสอบเข้า ม.1</p>
+                <ul class="book-features">
+                    <li>Parts of Speech</li>
+                    <li>Tenses พื้นฐาน</li>
+                    <li>Sentence Structure</li>
+                    <li>Vocabulary สำคัญ</li>
+                    <li>แบบฝึกหัด + เฉลย</li>
+                </ul>
+                <div class="price-section">
+                    <div class="price">50 บาท</div>
+                    <button class="buy-button" onclick="addToCart('ไวยากรณ์อังกฤษ ป.6', 50)">ซื้อเลย</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <h2>🛒 ตะกร้าสินค้า</h2>
+            <div id="cartItems"></div>
+            <button class="checkout-button" onclick="showCustomerForm()">สั่งซื้อ</button>
+            
+            <div class="customer-form" id="customerForm">
+                <h3 style="text-align: center; margin-bottom: 20px; color: #333;">📋 กรอกข้อมูลการสั่งซื้อ</h3>
+                
+                <div class="form-group">
+                    <label for="customerName">ชื่อ-นามสกุล *</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerEmail">อีเมล *</label>
+                    <input type="email" id="customerEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerPhone">เบอร์โทรศัพท์ *</label>
+                    <input type="tel" id="customerPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerSchool">โรงเรียน</label>
+                    <input type="text" id="customerSchool">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerGrade">ชั้นปี</label>
+                    <input type="text" id="customerGrade" placeholder="เช่น ป.6">
+                </div>
+                
+                <button class="confirm-purchase-btn" onclick="showPaymentOptions()">ดำเนินการชำระเงิน</button>
+                
+                <div class="payment-section" id="paymentSection">
+                    <h3 style="text-align: center; margin-bottom: 20px; color: #333;">💳 เลือกวิธีการชำระเงิน</h3>
+                    
+                    <div class="payment-methods">
+                        <div class="payment-option" onclick="selectPayment('truemoney')">
+                            <span class="payment-icon">💰</span>
+                            <div class="payment-name">TrueMoney Wallet</div>
+                        </div>
+                        
+                        <div class="payment-option" onclick="selectPayment('kplus')">
+                            <span class="payment-icon">🏛️</span>
+                            <div class="payment-name">K PLUS</div>
+                        </div>
+                        
+                        <div class="payment-option" onclick="selectPayment('qrcode')">
+                            <span class="payment-icon">📱</span>
+                            <div class="payment-name">QR Code</div>
+                        </div>
+                        
+                        <div class="payment-option" onclick="selectPayment('creditcard')">
+                            <span class="payment-icon">💳</span>
+                            <div class="payment-name">Credit Card</div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-details" id="paymentDetails"></div>
+                    
+                    <div class="qr-code-section" id="qrCodeSection">
+                        <h4>📱 สแกน QR Code เพื่อชำระเงิน</h4>
+                        <div class="qr-code-placeholder">
+                            📱💳
+                        </div>
+                        <p><strong>จำนวนเงิน: <span id="paymentAmount"></span> บาท</strong></p>
+                        <p>สแกน QR Code ด้วยแอพธนาคารหรือ TrueMoney</p>
+                    </div>
+                    
+                    <div class="upload-section" id="uploadSection">
+                        <p style="margin-bottom: 10px;"><strong>📸 แนบหลักฐานการโอนเงิน</strong></p>
+                        <label for="paymentProof" class="upload-label">
+                            📎 เลือกไฟล์รูปภาพ
+                        </label>
+                        <input type="file" id="paymentProof" class="upload-input" accept="image/*" onchange="handleFileUpload(this)">
+                        <div id="uploadedFile" class="uploaded-file" style="display: none;"></div>
+                    </div>
+                    
+                    <button class="confirm-payment-btn" id="confirmPaymentBtn" onclick="confirmPayment()" style="display: none;">
+                        ✅ ยืนยันการชำระเงิน
+                    </button>
+                </div>
+                
+                <div class="genius-branding">
+                    <div class="genius-logo">🎓 GeniusJR</div>
+                    <p style="color: #666; font-size: 0.9rem;">หนังสืออิเล็กทรอนิกส์คุณภาพสูง เพื่อการเรียนรู้ที่ดีที่สุด</p>
+                </div>
+            </div>
+            
+            <button class="close-button" onclick="hideCart()">ปิด</button>
+        </div>
+    </div>
+    
+    <div class="notes-modal" id="notesModal">
+        <div class="notes-content">
+            <h2 style="text-align: center; margin-bottom: 20px;">📝 บันทึกการเรียน</h2>
+            
+            <div class="notes-tabs">
+                <button class="notes-tab active" onclick="switchTab('math')">คณิตศาสตร์</button>
+                <button class="notes-tab" onclick="switchTab('chemistry')">เคมี</button>
+                <button class="notes-tab" onclick="switchTab('physics')">ฟิสิกส์</button>
+                <button class="notes-tab" onclick="switchTab('biology')">ชีววิทยา</button>
+                <button class="notes-tab" onclick="switchTab('astronomy')">ดาราศาสตร์</button>
+                <button class="notes-tab" onclick="switchTab('english')">อังกฤษ</button>
+            </div>
+            
+            <div class="note-area active" id="math-note">
+                <div class="note-title">📊 บันทึกคณิตศาสตร์</div>
+                <textarea class="note-textarea" id="math-textarea" placeholder="เขียนบันทึกการเรียนคณิตศาสตร์ของคุณที่นี่..." onkeyup="updateWordCount('math')"></textarea>
+                <div class="note-actions">
+                    <div>
+                        <button class="save-note-btn" onclick="saveNote('math')">💾 บันทึก</button>
+                        <button class="clear-note-btn" onclick="clearNote('math')">🗑️ ลบทั้งหมด</button>
+                    </div>
+                    <div class="word-count" id="math-wordcount">0 ตัวอักษร</div>
+                </div>
+            </div>
+            
+            <div class="note-area" id="chemistry-note">
+                <div class="note-title">🧪 บันทึกเคมี</div>
+                <textarea class="note-textarea" id="chemistry-textarea" placeholder="เขียนบันทึกการเรียนเคมีของคุณที่นี่..." onkeyup="updateWordCount('chemistry')"></textarea>
+                <div class="note-actions">
+                    <div>
+                        <button class="save-note-btn" onclick="saveNote('chemistry')">💾 บันทึก</button>
+                        <button class="clear-note-btn" onclick="clearNote('chemistry')">🗑️ ลบทั้งหมด</button>
+                    </div>
+                    <div class="word-count" id="chemistry-wordcount">0 ตัวอักษร</div>
+                </div>
+            </div>
+            
+            <div class="note-area" id="physics-note">
+                <div class="note-title">⚡ บันทึกฟิสิกส์</div>
+                <textarea class="note-textarea" id="physics-textarea" placeholder="เขียนบันทึกการเรียนฟิสิกส์ของคุณที่นี่..." onkeyup="updateWordCount('physics')"></textarea>
+                <div class="note-actions">
+                    <div>
+                        <button class="save-note-btn" onclick="saveNote('physics')">💾 บันทึก</button>
+                        <button class="clear-note-btn" onclick="clearNote('physics')">🗑️ ลบทั้งหมด</button>
+                    </div>
+                    <div class="word-count" id="physics-wordcount">0 ตัวอักษร</div>
+                </div>
+            </div>
+            
+            <div class="note-area" id="biology-note">
+                <div class="note-title">🧬 บันทึกชีววิทยา</div>
+                <textarea class="note-textarea" id="biology-textarea" placeholder="เขียนบันทึกการเรียนชีววิทยาของคุณที่นี่..." onkeyup="updateWordCount('biology')"></textarea>
+                <div class="note-actions">
+                    <div>
+                        <button class="save-note-btn" onclick="saveNote('biology')">💾 บันทึก</button>
+                        <button class="clear-note-btn" onclick="clearNote('biology')">🗑️ ลบทั้งหมด</button>
+                    </div>
+                    <div class="word-count" id="biology-wordcount">0 ตัวอักษร</div>
+                </div>
+            </div>
+            
+            <div class="note-area" id="astronomy-note">
+                <div class="note-title">🌟 บันทึกดาราศาสตร์</div>
+                <textarea class="note-textarea" id="astronomy-textarea" placeholder="เขียนบันทึกการเรียนดาราศาสตร์ของคุณที่นี่..." onkeyup="updateWordCount('astronomy')"></textarea>
+                <div class="note-actions">
+                    <div>
+                        <button class="save-note-btn" onclick="saveNote('astronomy')">💾 บันทึก</button>
+                        <button class="clear-note-btn" onclick="clearNote('astronomy')">🗑️ ลบทั้งหมด</button>
+                    </div>
+                    <div class="word-count" id="astronomy-wordcount">0 ตัวอักษร</div>
+                </div>
+            </div>
+            
+            <div class="note-area" id="english-note">
+                <div class="note-title">📝 บันทึกอังกฤษ</div>
+                <textarea class="note-textarea" id="english-textarea" placeholder="เขียนบันทึกการเรียนอังกฤษของคุณที่นี่..." onkeyup="updateWordCount('english')"></textarea>
+                <div class="note-actions">
+                    <div>
+                        <button class="save-note-btn" onclick="saveNote('english')">💾 บันทึก</button>
+                        <button class="clear-note-btn" onclick="clearNote('english')">🗑️ ลบทั้งหมด</button>
+                    </div>
+                    <div class="word-count" id="english-wordcount">0 ตัวอักษร</div>
+                </div>
+            </div>
+            
+            <button class="close-button" onclick="hideNotes()">ปิด</button>
+        </div>
+    </div>
+    
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-content">
+            <div class="celebration-emojis">🎉🎊✨🎈🌟</div>
+            <h1 class="success-title">สั่งซื้อสำเร็จแล้ว!</h1>
+            <div class="success-message">
+                ขอบคุณที่ใช้บริการ GeniusJR E-book Center<br>
+                คำสั่งซื้อของคุณได้รับการยืนยันเรียบร้อยแล้ว
+            </div>
+            
+            <div class="success-details" id="successOrderDetails">
+                <h4>📋 รายละเอียดการสั่งซื้อ</h4>
+                <div id="orderSummary"></div>
+            </div>
+            
+            <div style="margin: 20px 0; font-size: 1.1rem;">
+                ✅ ข้อมูลถูกส่งไปยังผู้ขายแล้ว<br>
+                📧 คุณจะได้รับไฟล์ PDF ทางอีเมลภายใน 24 ชั่วโมง<br>
+                💬 หากมีข้อสงสัย สามารถติดต่อได้ตลอดเวลา
+            </div>
+            
+            <button class="close-success-btn" onclick="closeSuccessPage()">
+                🏠 กลับสู่หน้าหลัก
+            </button>
+            
+            <div class="celebration-emojis" style="margin-top: 20px;">
+                🚀📚💫🎯🌈
+            </div>
+        </div>
+        
+        <!-- Confetti Animation -->
+        <div class="confetti" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="confetti" style="left: 20%; animation-delay: 0.2s;"></div>
+        <div class="confetti" style="left: 30%; animation-delay: 0.4s;"></div>
+        <div class="confetti" style="left: 40%; animation-delay: 0.6s;"></div>
+        <div class="confetti" style="left: 50%; animation-delay: 0.8s;"></div>
+        <div class="confetti" style="left: 60%; animation-delay: 1s;"></div>
+        <div class="confetti" style="left: 70%; animation-delay: 1.2s;"></div>
+        <div class="confetti" style="left: 80%; animation-delay: 1.4s;"></div>
+        <div class="confetti" style="left: 90%; animation-delay: 1.6s;"></div>
+    </div>
+    
+    <script>
+        let cart = [];
+        let notes = {
+            math: '',
+            chemistry: '',
+            physics: '',
+            biology: '',
+            astronomy: '',
+            english: ''
+        };
+        let selectedPaymentMethod = '';
+        let paymentProofFile = null;
+        
+        // Load saved notes on page load
+        window.onload = function() {
+            loadAllNotes();
+        };
+        
+        function addToCart(bookName, price) {
+            // Check if book already exists in cart
+            const existingItem = cart.find(item => item.name === bookName);
+            if (existingItem) {
+                alert('หนังสือนี้มีอยู่ในตะกร้าแล้ว!');
+                return;
+            }
+            
+            cart.push({ name: bookName, price: price });
+            updateCartDisplay();
+            
+            // Show success animation
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'เพิ่มแล้ว ✓';
+            button.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '';
+            }, 1500);
+        }
+        
+        function updateCartDisplay() {
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+        
+        function showCart() {
+            const cartItems = document.getElementById('cartItems');
+            let html = '';
+            let total = 0;
+            
+            if (cart.length === 0) {
+                html = '<p style="text-align: center; color: #666;">ตะกร้าว่าง</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    html += `
+                        <div class="cart-item">
+                            <span>${item.name}</span>
+                            <span>${item.price} บาท <button onclick="removeFromCart(${index})" style="background: #ff6b6b; color: white; border: none; border-radius: 3px; padding: 2px 8px; cursor: pointer; margin-left: 10px;">ลบ</button></span>
+                        </div>
+                    `;
+                    total += item.price;
+                });
+                
+                html += `
+                    <div class="cart-item">
+                        <span>รวมทั้งหมด:</span>
+                        <span>${total} บาท</span>
+                    </div>
+                `;
+            }
+            
+            cartItems.innerHTML = html;
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+        
+        function hideCart() {
+            document.getElementById('cartModal').style.display = 'none';
+            document.getElementById('customerForm').style.display = 'none';
+            document.getElementById('paymentSection').style.display = 'none';
+            resetPaymentForm();
+        }
+        
+        function resetPaymentForm() {
+            selectedPaymentMethod = '';
+            paymentProofFile = null;
+            document.getElementById('paymentDetails').style.display = 'none';
+            document.getElementById('qrCodeSection').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('confirmPaymentBtn').style.display = 'none';
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+        }
+        
+        function showPaymentOptions() {
+            // First validate customer form
+            const name = document.getElementById('customerName').value.trim();
+            const email = document.getElementById('customerEmail').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            
+            if (!name || !email || !phone) {
+                alert('กรุณากรอกข้อมูลที่จำเป็น (ชื่อ, อีเมล, เบอร์โทร)');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('กรุณากรอกอีเมลให้ถูกต้อง');
+                return;
+            }
+            
+            // Show payment section
+            document.getElementById('paymentSection').style.display = 'block';
+            document.querySelector('.confirm-purchase-btn').style.display = 'none';
+            
+            // Update payment amount
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('paymentAmount').textContent = total;
+        }
+        
+        function selectPayment(method) {
+            selectedPaymentMethod = method;
+            
+            // Remove selected class from all options
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            event.target.closest('.payment-option').classList.add('selected');
+            
+            // Hide all payment details first
+            document.getElementById('paymentDetails').style.display = 'none';
+            document.getElementById('qrCodeSection').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'none';
+            
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            let paymentHTML = '';
+            
+            switch(method) {
+                case 'truemoney':
+                    paymentHTML = `
+                        <h4>💰 TrueMoney Wallet</h4>
+                        <div class="payment-info">หมายเลข TrueMoney: <strong>065-959-2550</strong></div>
+                        <div class="payment-info">ชื่อผู้รับ: <strong>ฌานพษฐ์ เมืองพระ</strong></div>
+                        <div class="payment-info">จำนวนเงิน: <strong>${total} บาท</strong></div>
+                        <p>โอนเงินผ่าน TrueMoney Wallet แล้วแนบหลักฐานการโอน</p>
+                    `;
+                    break;
+                    
+                case 'kplus':
+                    paymentHTML = `
+                        <h4>🏛️ K PLUS (กสิกรไทย)</h4>
+                        <div class="payment-info">เลขที่บัญชี: <strong>0800101823</strong></div>
+                        <div class="payment-info">ชื่อบัญชี: <strong>ด.ญ.ณัฐนันท์ ดำรงทวีศักดิ์<strong></div>
+                        <div class="payment-info">ธนาคาร: <strong>กสิกรไทย</strong></div>
+                        <div class="payment-info">จำนวนเงิน: <strong>${total} บาท</strong></div>
+                        <p>โอนเงินผ่าน K PLUS แล้วแนบหลักฐานการโอน</p>
+                    `;
+                    break;
+                    
+                case 'qrcode':
+                    document.getElementById('qrCodeSection').style.display = 'block';
+                    paymentHTML = `
+                        <h4>📱 QR Code Payment</h4>
+                        <p>สแกน QR Code ด้านล่างเพื่อชำระเงิน ${total} บาท</p>
+                        <img src="501002607_1037222595189691_2727407472637866626_n.jpg">
+                        <p>รองรับ: PromptPay, TrueMoney, K PLUS, Bangkok Bank, SCB Easy</p>
+                    `;
+                    break;
+                    
+                case 'creditcard':
+                    paymentHTML = `
+                        <h4>💳 Credit Card</h4>
+                        <div class="payment-info">ยอดชำระ: <strong>${total} บาท</strong></div>
+                        <p>⚠️ การชำระด้วยบัตรเครดิตจะเพิ่มค่าธรรมเนียม 3%</p>
+                        <p>ยอดสุทธิ: <strong>${Math.ceil(total * 1.03)} บาท</strong></p>
+                        <p>กรุณาติดต่อเจ้าหน้าที่เพื่อดำเนินการชำระเงิน</p>
+                        <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                            <strong>📞 ติดต่อ:</strong> 065-959-2550<br>
+                            <strong>📱 Line ID:</strong> @geniusjr
+                        </div>
+                    `;
+                    break;
+            }
+            
+            document.getElementById('paymentDetails').innerHTML = paymentHTML;
+            document.getElementById('paymentDetails').style.display = 'block';
+            
+            // Show upload section for all methods except credit card
+            if (method !== 'creditcard') {
+                document.getElementById('uploadSection').style.display = 'block';
+            }
+            
+            // Show confirm button
+            document.getElementById('confirmPaymentBtn').style.display = 'block';
+        }
+        
+        function handleFileUpload(input) {
+            const file = input.files[0];
+            if (file) {
+                paymentProofFile = file;
+                const uploadedFileDiv = document.getElementById('uploadedFile');
+                uploadedFileDiv.textContent = `✅ ไฟล์: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+                uploadedFileDiv.style.display = 'block';
+            }
+        }
+        
+        function confirmPayment() {
+            if (!selectedPaymentMethod) {
+                alert('กรุณาเลือกวิธีการชำระเงิน');
+                return;
+            }
+            
+            if (selectedPaymentMethod !== 'creditcard' && !paymentProofFile) {
+                alert('กรุณาแนบหลักฐานการโอนเงิน');
+                return;
+            }
+            
+            // Get customer info
+            const name = document.getElementById('customerName').value.trim();
+            const email = document.getElementById('customerEmail').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const school = document.getElementById('customerSchool').value.trim();
+            const grade = document.getElementById('customerGrade').value.trim();
+            
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const bookList = cart.map(item => item.name).join(', ');
+            
+            const paymentMethodNames = {
+                'truemoney': 'TrueMoney Wallet',
+                'kplus': 'K PLUS',
+                'qrcode': 'QR Code',
+                'creditcard': 'Credit Card'
+            };
+            
+            // Create order details
+            const orderDetails = {
+                name: name,
+                email: email,
+                phone: phone,
+                school: school || 'ไม่ได้ระบุ',
+                grade: grade || 'ไม่ได้ระบุ',
+                books: bookList,
+                total: total,
+                paymentMethod: paymentMethodNames[selectedPaymentMethod],
+                hasPaymentProof: paymentProofFile ? 'มี' : 'ไม่มี',
+                proofFileName: paymentProofFile ? paymentProofFile.name : '-',
+                orderDate: new Date().toLocaleDateString('th-TH'),
+                orderTime: new Date().toLocaleTimeString('th-TH')
+            };
+            
+            // Send email notification
+            sendEmailNotification(orderDetails);
+        }
+        
+        function showCustomerForm() {
+            if (cart.length === 0) {
+                alert('ตะกร้าว่าง กรุณาเลือกหนังสือก่อน');
+                return;
+            }
+            
+            document.getElementById('customerForm').style.display = 'block';
+            document.querySelector('.checkout-button').style.display = 'none';
+        }
+        
+        function confirmPurchase() {
+            // Validate form
+            const name = document.getElementById('customerName').value.trim();
+            const email = document.getElementById('customerEmail').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            
+            if (!name || !email || !phone) {
+                alert('กรุณากรอกข้อมูลที่จำเป็น (ชื่อ, อีเมล, เบอร์โทร)');
+                return;
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('กรุณากรอกอีเมลให้ถูกต้อง');
+                return;
+            }
+            
+            const school = document.getElementById('customerSchool').value.trim();
+            const grade = document.getElementById('customerGrade').value.trim();
+            
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const bookList = cart.map(item => item.name).join(', ');
+            
+            // Create order details
+            const orderDetails = {
+                name: name,
+                email: email,
+                phone: phone,
+                school: school || 'ไม่ได้ระบุ',
+                grade: grade || 'ไม่ได้ระบุ',
+                books: bookList,
+                total: total,
+                orderDate: new Date().toLocaleDateString('th-TH'),
+                orderTime: new Date().toLocaleTimeString('th-TH')
+            };
+            
+            // Send email using EmailJS service
+            sendEmailNotification(orderDetails);
+        }
+        
+        function sendEmailNotification(orderDetails) {
+            // Show loading message
+            const confirmBtn = document.querySelector('.confirm-purchase-btn');
+            const originalText = confirmBtn.textContent;
+            confirmBtn.textContent = 'กำลังส่งคำสั่งซื้อ...';
+            confirmBtn.disabled = true;
+            
+            // Create email body for FormSubmit
+            const formData = new FormData();
+            formData.append('name', orderDetails.name);
+            formData.append('email', orderDetails.email);
+            formData.append('phone', orderDetails.phone);
+            formData.append('school', orderDetails.school);
+            formData.append('grade', orderDetails.grade);
+            formData.append('books', orderDetails.books);
+            formData.append('total', orderDetails.total + ' บาท');
+            formData.append('paymentMethod', orderDetails.paymentMethod);
+            formData.append('paymentProof', orderDetails.hasPaymentProof);
+            formData.append('proofFileName', orderDetails.proofFileName);
+            formData.append('orderDate', orderDetails.orderDate + ' ' + orderDetails.orderTime);
+            formData.append('_subject', `[GeniusJR] คำสั่งซื้อใหม่จาก ${orderDetails.name}`);
+            formData.append('_template', 'table');
+            
+            // Use FormSubmit.co service to send email
+            // Replace YOUR_EMAIL_HERE with your actual email address
+            fetch('https://formsubmit.co/Chiryu1910@gmail.com', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Success
+                    showSuccessMessage(orderDetails);
+                    
+                    // Reset form
+                    document.getElementById('customerForm').reset();
+                    document.getElementById('customerForm').style.display = 'none';
+                    document.getElementById('paymentSection').style.display = 'none';
+                    document.querySelector('.checkout-button').style.display = 'block';
+                    resetPaymentForm();
+                    hideCart();
+                } else {
+                    throw new Error('Failed to send email');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Fallback to manual email method
+                fallbackEmailMethod(orderDetails);
+            })
+            .finally(() => {
+                confirmBtn.textContent = originalText;
+                confirmBtn.disabled = false;
+            });
+        }
+        
+        function fallbackEmailMethod(orderDetails) {
+            // Fallback: Open email client as backup
+            const emailBody = `
+📚 คำสั่งซื้อใหม่จาก GeniusJR E-book Center
+
+📋 ข้อมูลลูกค้า:
+• ชื่อ: ${orderDetails.name}
+• อีเมล: ${orderDetails.email}
+• เบอร์โทร: ${orderDetails.phone}
+• โรงเรียน: ${orderDetails.school}
+• ชั้นปี: ${orderDetails.grade}
+
+📖 รายการสินค้า: ${orderDetails.books}
+• ยอดรวม: ${orderDetails.total} บาท
+• วิธีชำระเงิน: ${orderDetails.paymentMethod}
+• หลักฐานการโอน: ${orderDetails.hasPaymentProof}
+• ไฟล์แนบ: ${orderDetails.proofFileName}
+📅 วันที่สั่งซื้อ: ${orderDetails.orderDate} ${orderDetails.orderTime}
+
+กรุณาส่ง PDF ไฟล์ไปยังอีเมล: ${orderDetails.email}
+            `.trim();
+            
+            const sellerEmail = "Chiryu1910@gmail.com"; // เปลี่ยนเป็นอีเมลของคุณ
+            const subject = `[GeniusJR] คำสั่งซื้อใหม่ - ${orderDetails.name}`;
+            const mailtoLink = `mailto:${sellerEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+            
+            alert(`ระบบอีเมลอัตโนมัติมีปัญหา กรุณาส่งข้อมูลด้วยตนเอง\n\nกดตกลงเพื่อเปิดโปรแกรมอีเมล`);
+            window.open(mailtoLink);
+            
+            showSuccessMessage(orderDetails);
+            
+            // Reset cart and form
+            cart = [];
+            updateCartDisplay();
+            document.getElementById('customerForm').reset();
+            document.getElementById('customerForm').style.display = 'none';
+            document.getElementById('paymentSection').style.display = 'none';
+            document.querySelector('.checkout-button').style.display = 'block';
+            resetPaymentForm();
+            hideCart();
+        }
+        
+        function showSuccessMessage(orderDetails) {
+            // Create order summary HTML
+            const orderSummaryHTML = `
+                <div class="order-info"><strong>👤 ชื่อ:</strong> ${orderDetails.name}</div>
+                <div class="order-info"><strong>📧 อีเมล:</strong> ${orderDetails.email}</div>
+                <div class="order-info"><strong>📚 หนังสือ:</strong> ${orderDetails.books}</div>
+                <div class="order-info"><strong>💰 ยอดรวม:</strong> ${orderDetails.total} บาท</div>
+                <div class="order-info"><strong>💳 การชำระเงิน:</strong> ${orderDetails.paymentMethod}</div>
+                <div class="order-info"><strong>📅 วันที่:</strong> ${orderDetails.orderDate}</div>
+            `;
+            
+            document.getElementById('orderSummary').innerHTML = orderSummaryHTML;
+            document.getElementById('successOverlay').style.display = 'flex';
+            
+            // Add more confetti dynamically
+            createConfetti();
+        }
+        
+        function createConfetti() {
+            const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#ff6b6b', '#ffd93d'];
+            const successOverlay = document.getElementById('successOverlay');
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    successOverlay.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 5000);
+                }, i * 100);
+            }
+        }
+        
+        function closeSuccessPage() {
+            document.getElementById('successOverlay').style.display = 'none';
+            
+            // Clean up any remaining confetti
+            const confettiElements = document.querySelectorAll('.confetti');
+            confettiElements.forEach(confetti => {
+                if (confetti.parentNode) {
+                    confetti.parentNode.removeChild(confetti);
+                }
+            });
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+            showCart(); // Refresh the cart display
+        }
+        
+        function checkout() {
+            // This function is no longer used - replaced by showCustomerForm
+            showCustomerForm();
+        }
+        
+        // Notes functionality
+        function showNotes() {
+            document.getElementById('notesModal').style.display = 'flex';
+            loadNote(currentNoteTab);
+        }
+        
+        function hideNotes() {
+            document.getElementById('notesModal').style.display = 'none';
+        }
+        
+        function switchTab(subject) {
+            // Save current note before switching
+            saveNote(currentNoteTab);
+            
+            // Remove active class from all tabs and areas
+            document.querySelectorAll('.notes-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.note-area').forEach(area => area.classList.remove('active'));
+            
+            // Add active class to selected tab and area
+            event.target.classList.add('active');
+            document.getElementById(subject + '-note').classList.add('active');
+            
+            // Load note for this subject
+            currentNoteTab = subject;
+            loadNote(subject);
+        }
+        
+        function saveNote(subject) {
+            const textarea = document.getElementById(subject + '-textarea');
+            const noteText = textarea.value;
+            notes[subject] = noteText;
+            
+            // Store in browser memory (no localStorage used)
+            console.log(`บันทึก ${subject} สำเร็จ: ${noteText.length} ตัวอักษร`);
+            
+            // Show save confirmation
+            const saveBtn = document.querySelector(`#${subject}-note .save-note-btn`);
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = '✅ บันทึกแล้ว!';
+            saveBtn.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                saveBtn.textContent = originalText;
+                saveBtn.style.background = '#4CAF50';
+            }, 2000);
+        }
+        
+        function loadNote(subject) {
+            const textarea = document.getElementById(subject + '-textarea');
+            textarea.value = notes[subject] || '';
+            updateWordCount(subject);
+        }
+        
+        function loadAllNotes() {
+            // Initialize all textareas with saved notes
+            Object.keys(notes).forEach(subject => {
+                loadNote(subject);
+            });
+        }
+        
+        function clearNote(subject) {
+            if (confirm('คุณต้องการลบบันทึกทั้งหมดของวิชานี้หรือไม่?')) {
+                const textarea = document.getElementById(subject + '-textarea');
+                textarea.value = '';
+                notes[subject] = '';
+                updateWordCount(subject);
+            }
+        }
+        
+        function updateWordCount(subject) {
+            const textarea = document.getElementById(subject + '-textarea');
+            const wordCountElement = document.getElementById(subject + '-wordcount');
+            const count = textarea.value.length;
+            wordCountElement.textContent = count + ' ตัวอักษร';
+        }
+        
+        // Close modals when clicking outside
+        document.getElementById('cartModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideCart();
+            }
+        });
+        
+        document.getElementById('notesModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideNotes();
+            }
+        });
+        
+        // Auto-save notes every 30 seconds
+        setInterval(function() {
+            if (document.getElementById('notesModal').style.display === 'flex') {
+                saveNote(currentNoteTab);
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
